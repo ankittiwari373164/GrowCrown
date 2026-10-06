@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./boutique.css";
 
 export const metadata: Metadata = {
   title: "Glowcrown | Everyday elegance, beautifully yours",
