@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Your product name",
+    "category": "Kurtas & Sets",
+    "price": 1499,
+    "compare_price": 1999,
+    "image": "https://YOUR-IMAGE-HOST/product.jpg",
+    "description": "Replace with your verified fabric, fit and care information.",
+    "stock": 10,
+    "sizes": ["S", "M", "L", "XL"],
+    "active": true,
+    "featured": true
+  }
+]
