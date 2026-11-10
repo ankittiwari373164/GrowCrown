@@ -147,3 +147,6 @@ footer{background:linear-gradient(180deg,#3c0a23,#25061a);color:#f3dbe2;border:0
 @media(max-width:900px){.hero-v3{grid-template-columns:1fr;padding:30px 6% 50px;min-height:0}.hero-stage{min-height:520px}.stage-card{left:0;bottom:30px}.legal-body{grid-template-columns:1fr}.legal-toc{position:static}.legal article{padding:26px 20px}}
 @media(max-width:480px){.hero-v3 h1{font-size:44px}.arch{width:78vw}.stage-logo{width:64px;height:64px}.hero-stage .halo{width:380px;height:380px}}
 .arch img{color:transparent;font-size:0}
+/* checkout payment options */
+.pay-options{display:grid;gap:10px;margin:8px 0 4px}.pay-opt{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1.5px solid #f0c8d4;border-radius:14px;background:#fff;cursor:pointer;transition:all .2s}.pay-opt input{width:auto;margin-top:4px;accent-color:#7a1340}.pay-opt b{display:block;font-size:15px}.pay-opt small{color:#8a6a76}.pay-opt.on{border-color:#7a1340;background:#fff4f7;box-shadow:0 6px 18px #7a13401a}
+.order-record .badge+.badge{margin-left:6px}
