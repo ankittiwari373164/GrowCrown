@@ -14,7 +14,7 @@ async function token(){
 async function call(path:string,method='GET',body?:unknown){
   const r=await fetch(BASE+path,{method,headers:{Authorization:'Bearer '+await token(),'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined,cache:'no-store'});
   const d:any=await r.json().catch(()=>null);
-  if(!r.ok)throw Error('Shiprocket: '+(d?.message||JSON.stringify(d?.errors||d)||r.status));
+  if(!r.ok||(d?.status_code&&d.status_code>=400))throw Error('Shiprocket: '+(d?.message||'')+(d?.errors?' '+JSON.stringify(d.errors):'')+(d?.data&&!d?.message?JSON.stringify(d.data):'')||'HTTP '+r.status);
   return d;
 }
 const n=(k:string,def:number)=>Number(process.env[k])||def;
@@ -35,7 +35,14 @@ export async function createShipment(o:any,email:string,skus:Record<string,strin
     shipping_charges:Number(o.shipping_fee||0),total_discount:Number(o.discount||0),sub_total:Number(o.subtotal||0),
     length:n('SHIPROCKET_LENGTH_CM',30),breadth:n('SHIPROCKET_BREADTH_CM',25),height:Math.max(3,n('SHIPROCKET_HEIGHT_CM',4)*Math.min(units,5)),weight:+(n('SHIPROCKET_WEIGHT_KG',0.5)*units).toFixed(2),
   };
-  return await call('/orders/create/adhoc','POST',payload) as {order_id:number;shipment_id:number;status:string;awb_code?:string;courier_name?:string};
+  const d:any=await call('/orders/create/adhoc','POST',payload);
+  // Shiprocket can answer HTTP 200 with an error inside the body; treat a missing shipment_id as a failure.
+  if(!d?.shipment_id){
+    const why=d?.message||(d?.errors?Object.values(d.errors).flat().join('; '):'')||JSON.stringify(d).slice(0,300);
+    const hint=/pickup/i.test(why)?' (check SHIPROCKET_PICKUP_LOCATION matches the pickup nickname in Shiprocket exactly)':'';
+    throw Error('Shiprocket did not create the order: '+why+hint);
+  }
+  return d as {order_id:number;shipment_id:number;status:string;awb_code?:string;courier_name?:string};
 }
 export async function trackShipment(shipmentId:string|number){
   const d:any=await call('/courier/track/shipment/'+shipmentId);
